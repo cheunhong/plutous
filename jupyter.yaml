@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-  tradesk-jupyter:
+  plutus-jupyter:
     build:
       context: .
       dockerfile: Dockerfile.jupyter
@@ -11,8 +11,9 @@ services:
       - SHELL=/bin/bash
     volumes:
       - .:/root/plutus
-      - ./data:/root/work/data
       - ./notebooks:/root/work
+      - ./data:/root/work/data
+      - ./secrets:/root/work/secrets
     ports:
       - "8888:8888"
     command: jupyter lab --port=8888 --ip 0.0.0.0 --allow-root --NotebookApp.token=''

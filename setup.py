@@ -15,7 +15,6 @@ setuptools.setup(
     install_requires = [
         'PyPortfolioOpt',
         'vectorbt[full]',
-        'TA-Lib',
         'quantstats',
         'pandas_ta',
         'sqlmodel',
@@ -23,6 +22,7 @@ setuptools.setup(
         'PyMySQL',
         'alembic',
         'inflect',
+        'TA-Lib',
         'pandas',
         'babel',
         'ccxt',
