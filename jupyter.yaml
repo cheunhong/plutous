@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  tradesk-jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    container_name: plutus-jupyter
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - SHELL=/bin/bash
+    volumes:
+      - .:/root/plutus
+      - ./data:/root/work/data
+      - ./notebooks:/root/work
+    ports:
+      - "8888:8888"
+    command: jupyter lab --port=8888 --ip 0.0.0.0 --allow-root --NotebookApp.token=''
+    stdin_open: true
+    tty: true
