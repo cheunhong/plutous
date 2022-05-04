@@ -13,6 +13,7 @@ setuptools.setup(
     author_email = 'chlin6755@gmail.com',
     url = 'https://github.com/cheunhong/plutus',
     install_requires = [
+        'SQLAlchemy<=1.4.35',
         'PyPortfolioOpt',
         'vectorbt[full]',
         'quantstats',
