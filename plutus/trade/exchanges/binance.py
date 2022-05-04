@@ -85,7 +85,7 @@ class BinanceFuturesBase(BinanceBase):
         market: Optional[Dict[str, Any]] = None,
         since: Optional[int] = None, 
         limit: Optional[int] = None,
-    )-> List[Dict[str, Any]]:
+    ) -> List[Dict[str, Any]]:
         return self.api.parse_incomes(incomes, market, since, limit)
         
     async def fetch_asset_balance(self) -> Dict[str, Decimal]:
