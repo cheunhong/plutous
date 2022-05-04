@@ -20,8 +20,6 @@ class BaseTracker:
         self.account = Account(id=account_id).get(self.session)
         self.positions = []
         self.positions_df = pd.DataFrame()
-
-        assert db.get_url().split('/')[-1] == 'finance_test'
     
     def __enter__(self):
         return self
