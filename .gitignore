@@ -132,6 +132,6 @@ dmypy.json
 .DS_Store
 
 # Own Stuff
-data
-secrets
-notebooks
+/data
+/secrets
+/notebooks
