@@ -11,8 +11,9 @@ from .transaction import transactable_join
 from .realized_pnl import RealizedPnl
 from .commission import Commission
 from .base import BaseModel
+from ..config import config
 from .types import Amount
-from ..configuration import config
+
 
 if TYPE_CHECKING:
     from typing_extensions import Self

@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING, Optional, Dict
 from pydantic import PrivateAttr
 from datetime import datetime
 from .enums import TAccountType, AssetType, PositionSide
-from ..configuration import config
 from .position import Position
 from .base import BaseModel
+from ..config import config
 from .types import Amount
 
 

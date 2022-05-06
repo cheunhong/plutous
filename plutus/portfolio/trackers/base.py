@@ -1,6 +1,6 @@
 from plutus.models import Trade, Position, Account
 from plutus.models.enums import AssetType
-from plutus.configuration import config
+from plutus.config import config
 from plutus import database as db
 from datetime import datetime, timedelta
 from typing import List, Optional

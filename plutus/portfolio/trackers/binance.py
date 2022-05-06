@@ -4,7 +4,7 @@ from plutus.trade.exchanges.binance import (
 )
 from plutus.models.enums import Action, AssetType
 from plutus.models import Trade, FundingFee
-from plutus.configuration import config
+from plutus.config import config
 from plutus.utilities import condecimal
 from plutus import database as db
 from typing import Any, Dict, List

@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from .utilities import deep_merge_dicts
+from .utils import deep_merge_dicts
 from .constants import (
     POSITION_CASH_EQUIVALENTS,
     POSITION_BASE_CURRENCY,

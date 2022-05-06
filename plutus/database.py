@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from alembic.config import Config
 from alembic import command
 from typing import Optional
-from .configuration import config
+from .config import config
 from .models import *
 import logging
 import os
