@@ -1,5 +1,6 @@
 from typing import Callable, Optional, Awaitable, List, Dict, Any
 from datetime import datetime, timedelta, timezone
+import numpy as np
 import functools
 import asyncio
 import ccxt
@@ -8,33 +9,40 @@ import ccxt
 Coroutine = Callable[[Any], Awaitable[List[Dict[str, Any]]]]
 
 
-def preprocess(kwargs):
+def _preprocess(kwargs, co_varnames):
     """
     Update ``since`` in kwargs so that it accepts ``millisecond`` and ``datetime``
+    and ``**kwargs`` to ``params``.
     """
     since = kwargs.get('since')
     if since is not None:
         if isinstance(since, datetime):
             kwargs['since'] = int(since.timestamp() * 1000)
+    params = kwargs.get('params', {})
+    for key in kwargs.copy():
+        if key not in co_varnames:
+            params[key] = kwargs.pop(key)
+    kwargs['params'] = params
 
 
 def add_preprocess(cls):
     """
-    Decorator for a ``ccxt.Exchange`` class to add ``preprocess`` to 
-    all existing ``fetch_*`` function with ``since`` in argument.
+    Decorator for a ``ccxt.Exchange`` class to add ``preprocess``
+    to all existing ``fetch_*`` function  with ``params`` in argument.
     """
     def decorate(func: Coroutine) -> Coroutine:
         @functools.wraps(func)
         async def wrapper(*args, **kwargs) -> List[Dict[str, Any]]:
-            kwargs.update(zip(func.__code__.co_varnames, args))
-            preprocess(kwargs)
+            co_varnames = func.__code__.co_varnames
+            kwargs.update(zip(co_varnames, args))
+            _preprocess(kwargs, co_varnames)
             return await func(**kwargs)
         return wrapper
 
     for attr in dir(cls):
         if 'fetch_' in attr:
             func: Callable = getattr(cls, attr)
-            if 'since' in func.__code__.co_varnames:
+            if 'params' in func.__code__.co_varnames:
                 setattr(cls, attr, decorate(func))
     return cls
 
@@ -53,10 +61,25 @@ def paginate(
     Parameters
     ----------
     id_arg : str, optional
-        Parameter name to filter 
+        Parameter name to filter ``id`` of the request. Default to ``fromId``.
+    start_time_arg : str, optional
+        Parameter name for start_time filter of the request. Default to ``startTime``.
+    end_time_arg : str, optional
+        Parameter name for end_time filter of the request. Default to ``endTime``.
+    max_limit: int, optional
+        Max limit of the given endpoint. Default to ``float('inf')``.
+    max_interval: datetime.timedelta, optional
+        Max interval between ``start_time`` and ``end_time`` that the give end points allowed
+
+    Returns
+    ----------
+    Callable
+        Decorator on given function
     """
+    
     def decorator(func: Coroutine) -> Coroutine:
         async def paginate_over_limit(**kwargs) -> List[Dict[str, Any]]:
+            params = kwargs['params']
             limit = kwargs.get('limit') or float('inf')
             limit_arg = min(limit, max_limit)
             kwargs['limit'] = limit_arg if limit_arg != float('inf') else None
@@ -64,22 +87,26 @@ def paginate(
             records = await func(**kwargs)
             all_records = records
             limit -= max_limit
+            limit = limit if limit != np.nan else 0
 
             while (records == max_limit) & (limit > 0):
-                kwargs['limit'] = min(limit, max_limit)
                 if id_arg in kwargs:
-                    kwargs[id_arg] = int(records[-1]['id']) + 1
-                elif start_time_arg in kwargs:
+                    params[id_arg] = int(records[-1]['id']) + 1
+                elif ('since' in kwargs) or (start_time_arg in params):
                     kwargs['since'] = int(records[-1]['timestamp']) + 1
+                else:
+                    break
+                kwargs['limit'] = min(limit, max_limit)
                 records = await func(**kwargs)
                 all_records.extend(records)
                 limit -= max_limit
             return all_records
 
         async def paginate_over_interval(**kwargs) -> List[Dict[str, Any]]:
-            since = kwargs.get('since') or kwargs.get(start_time_arg)
+            params = kwargs['params']
+            since = kwargs.get('since') or params.get(start_time_arg)
             now = int(datetime.now(timezone.utc).timestamp() * 1000)
-            end = kwargs.get(end_time_arg, now)
+            end = params.get(end_time_arg, now)
             if 'timeframe' in kwargs:
                 diff = (
                     ccxt.Exchange.parse_timeframe(kwargs['timeframe']) 
@@ -96,9 +123,9 @@ def paginate(
             coroutines = []
             for since in range(since, end, diff):
                 params = kwargs.copy()
-                params['since'] = since
+                kwargs['since'] = since
                 params[end_time_arg] = min(since + diff - 1, end)
-                coroutines.append(paginate_over_limit(**params))
+                coroutines.append(paginate_over_limit(**kwargs))
 
             records = []
             all_records = await asyncio.gather(*coroutines)
@@ -109,8 +136,10 @@ def paginate(
 
         @functools.wraps(func)
         async def wrapper(*args, **kwargs) -> List[Dict[str, Any]]:
-            kwargs.update(zip(func.__code__.co_varnames, args))
-            preprocess(kwargs)
+            co_varnames = func.__code__.co_varnames
+            kwargs.update(zip(co_varnames, args))
+            _preprocess(kwargs, co_varnames)
+
             if id_arg in kwargs:
                 return await paginate_over_limit(**kwargs)
             if ('since' in kwargs) or (start_time_arg in kwargs):
