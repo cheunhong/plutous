@@ -25,10 +25,9 @@ def get_uri(
     return f"mysql+{driver}://{user}:{password}@{host}:{port}/{database}"
 
 
-engine = create_engine(get_uri(), echo=db['echo'])
-async_engine = create_async_engine(get_uri(driver='asyncmy'), echo=db['echo'])
-is_engine = create_engine(
-    get_uri(database='information_schema'), echo=db['echo']
+engine = create_engine(get_uri())
+async_engine = create_async_engine(get_uri(driver='asyncmy'))
+is_engine = create_engine(get_uri(database='information_schema')
 )
 Session = sessionmaker(engine, autoflush=False)
 

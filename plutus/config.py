@@ -22,7 +22,6 @@ DEFAULT_CONFIG = {
         'user': 'root',
         'password': 'root',
         'database': 'plutus',
-        'echo': False
     },
     'position': {
         'base_currency': POSITION_BASE_CURRENCY,
