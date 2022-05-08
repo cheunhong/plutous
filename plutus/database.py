@@ -1,6 +1,7 @@
 from sqlmodel.sql.expression import Select, SelectOfScalar
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import SQLModel, create_engine, text
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from alembic.config import Config
 from alembic import command
@@ -30,6 +31,7 @@ async_engine = create_async_engine(get_uri(driver='asyncmy'))
 is_engine = create_engine(get_uri(database='information_schema')
 )
 Session = sessionmaker(engine, autoflush=False)
+AsyncSession = sessionmaker(async_engine, autoflush=False, class_=AsyncSession)
 
 # Silencing some SQL Alchemy warning about inherit_cache performance
 SelectOfScalar.inherit_cache = True  # type: ignore
