@@ -2,10 +2,12 @@ from typing import Callable, Optional, Awaitable, List, Dict, Any
 from datetime import datetime, timedelta, timezone
 import numpy as np
 import functools
+import logging
 import asyncio
 import ccxt
 
 
+logger = logging.getLogger(__name__)
 Coroutine = Callable[[Any], Awaitable[List[Dict[str, Any]]]]
 
 
@@ -127,6 +129,11 @@ def paginate(
                 params[end_time_arg] = min(since + diff - 1, end)
                 coroutines.append(paginate_over_limit(**kwargs))
 
+            logger.info(
+                f'Calling {func.__name__} {kwargs} ' 
+                + f'max_interval: {max_interval} '
+                + f'Paginating over {len(coroutines)} intervals.'
+            )
             records = []
             all_records = await asyncio.gather(*coroutines)
             for record in all_records:
@@ -142,7 +149,7 @@ def paginate(
 
             if id_arg in kwargs:
                 return await paginate_over_limit(**kwargs)
-            if ('since' in kwargs) or (start_time_arg in kwargs):
+            if ('since' in kwargs) or (start_time_arg in kwargs['params']):
                 return await paginate_over_interval(**kwargs)
             return await func(**kwargs)
         return wrapper
