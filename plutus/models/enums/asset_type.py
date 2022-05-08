@@ -15,6 +15,7 @@ class AssetType(int, Enum):
     commodity_futures: int = 11
     commodity_option: int = 12
     crypto_futures: int = 13
-    crypto_option: int = 14
-    crypto_perp: int = 15
-    crypto_inverse_perp: int = 16
+    crypto_inverse_futures: int = 14
+    crypto_option: int = 15
+    crypto_perp: int = 16
+    crypto_inverse_perp: int = 17
