@@ -1,8 +1,8 @@
 
 from ccxt.async_support import binance, binanceusdm, binancecoinm
-from ccxt.base.errors import NotSupported
+from ccxt.base.errors import NotSupported, BadSymbol
+from datetime import datetime, timedelta, timezone
 from .utils import add_preprocess, paginate
-from datetime import timedelta
 
 
 @add_preprocess
@@ -10,18 +10,134 @@ class BinanceBase(binance):
     def describe(self):
         return self.deep_extend(super(BinanceBase, self).describe(), {
             'plutus_funcs': [
+                'parse_c2c_trade',
+                'parse_c2c_trades',
                 'fetch_incomes',
+                'fetch_c2c_trades',
                 'fetch_commissions',
                 'fetch_wallet_balance',
             ]
         })
 
+    def parse_c2c_trade(self, trade):
+        # {'orderNumber': '20300690644555571200',
+        # 'advNo': '11300308153087909888',
+        # 'tradeType': 'BUY',
+        # 'asset': 'USDT',
+        # 'fiat': 'RON',
+        # 'fiatSymbol': 'lei',
+        # 'amount': '455.89000000',
+        # 'totalPrice': '2000.00000000',
+        # 'unitPrice': '4.387',
+        # 'orderStatus': 'COMPLETED',
+        # 'createTime': '1638684240000',
+        # 'commission': '0',
+        # 'counterPartNickName': 'X***',
+        # 'advertisementRole': 'TAKER'}
+
+        timestamp = self.safe_integer(trade, 'createTime')
+        id = self.safe_string(trade, 'orderNumber')
+        advNo = self.safe_string(trade, 'advNo')
+        tradeType = self.safe_string(trade, 'tradeType')
+        asset = self.safe_string(trade, 'asset')
+        fiat = self.safe_string(trade, 'fiat')
+        fiatSymbol = self.safe_string(trade, 'fiatSymbol')
+        amount = self.safe_string(trade, 'amount')
+        totalPrice = self.safe_string(trade, 'totalPrice')
+        unitPrice = self.safe_string(trade, 'unitPrice')
+        orderStatus = self.safe_string(trade, 'orderStatus')
+        commission = self.safe_string(trade, 'commission')
+        counterPartNickName = self.safe_string(trade, 'counterPartNickName')
+        advertisementRole = self.safe_string(trade, 'advertisementRole')
+
+        return {
+            'id': id,
+            'advNo': advNo,
+            'tradeType': tradeType,
+            'asset': asset,
+            'fiat': fiat,
+            'fiatSymbol': fiatSymbol,
+            'amount': amount,
+            'totalPrice': totalPrice,
+            'unitPrice': unitPrice,
+            'orderStatus': orderStatus,
+            'timestamp': timestamp,
+            'commission': commission,
+            'counterPartNickName': counterPartNickName,
+            'advertisementRole': advertisementRole,
+        }
+        
+    def parse_convert_history(self, trade):
+        # {'quoteId': 'aea3a3a53f5e4667b8df7241f04b7b9b',
+        # 'orderId': '1085789920229951883',
+        # 'orderStatus': 'SUCCESS',
+        # 'fromAsset': 'BUSD',
+        # 'fromAmount': '20',
+        # 'toAsset': 'USDT',
+        # 'toAmount': '19.98304',
+        # 'ratio': '0.999152',
+        # 'inverseRatio': '1.0008487',
+        # 'createTime': '1641138583193'}
+
+        fromAsset = self.safe_string(trade, 'fromAsset')
+        toAsset = self.safe_string(trade, 'toAsset')
+        try:
+            symbol = f'{toAsset}/{fromAsset}'
+            self.market(symbol)
+        except BadSymbol:
+            symbol = f'{fromAsset}/{toAsset}'
+        
+
+    def parse_c2c_trades(self, trades):
+        # {'code': '000000',
+        #  'message': 'success',
+        #  'data': [{'orderNumber': '20300690644555571200',
+        #    'advNo': '11300308153087909888',
+        #    'tradeType': 'BUY',
+        #    'asset': 'USDT',
+        #    'fiat': 'RON',
+        #    'fiatSymbol': 'lei',
+        #    'amount': '455.89000000',
+        #    'totalPrice': '2000.00000000',
+        #    'unitPrice': '4.387',
+        #    'orderStatus': 'COMPLETED',
+        #    'createTime': '1638684240000',
+        #    'commission': '0',
+        #    'counterPartNickName': 'X***',
+        #    'advertisementRole': 'TAKER'},
+        #   {'orderNumber': '20300479660467953664',
+        #    'advNo': '11299858648265822208',
+        #    'tradeType': 'BUY',
+        #    'asset': 'USDT',
+        #    'fiat': 'RON',
+        #    'fiatSymbol': 'lei',
+        #    'amount': '434.97000000',
+        #    'totalPrice': '2000.00000000',
+        #    'unitPrice': '4.598',
+        #    'orderStatus': 'COMPLETED',
+        #    'createTime': '1638633938000',
+        #    'commission': '0',
+        #    'counterPartNickName': 'Usd***',
+        #    'advertisementRole': 'TAKER'}],
+        #  'total': '2',
+        #  'success': True}
+        trades = trades['data']
+        result = []
+        for trade in trades:
+            result.append(self.parse_c2c_trade(trade))
+
+        return result
+    
     async def fetch_wallet_balance(self, params={}):
         defaultType = self.safe_string_2(self.options, 'fetchWalletBalance', 'defaultType', 'spot')
         type = self.safe_string(params, 'type', defaultType)
 
-        balance = await self.fetch_balance(params.copy().update({'type': type}))
+        query = params.copy()
+        query['type'] = type
+        balance = await self.fetch_balance(query)
         if type in ('future', 'delivery'):
+            # Futures balance took marginBalance as the total, 
+            # we are looking for wallet balance
             balance = balance['info']['assets']
             return {
                 item['asset']: self.parse_number(item['walletBalance'])
@@ -74,6 +190,42 @@ class BinanceBase(binance):
         self, symbol=None, since=None, limit=None, params={},
     ):
         return await self.fetch_incomes('FUNDING_FEE', symbol, since, limit, params)
+
+    @paginate(
+        max_limit=100,
+        max_interval=timedelta(days=30),
+        start_time_arg='startTimestamp',
+        end_time_arg='endTimestamp'
+    )
+    async def fetch_c2c_trades(self, since=None, limit=None, params={}):
+        query = params.copy()
+        if since is not None:
+            query['startTimestamp'] = since
+
+        if limit is not None:
+            query['row'] = limit
+        
+        trades = await self.sapi_get_c2c_ordermatch_listuserorderhistory(query) 
+        return self.parse_c2c_trades(trades)
+
+    @paginate(
+        max_limit=1000,
+        max_interval=timedelta(days=30),
+    )
+    async def fetch_convert_history(self, since=None, params={}):
+        if since is None:
+            since = int((
+                datetime.now(timezone.utc) 
+                - timedelta(days=30)
+            ).timestamp() * 1000)
+
+        end = params.get('endTime', datetime.now(timezone.utc))
+        query = params.copy()
+
+        query['startTime'] = since
+        query['endTime'] = end
+
+        return await self.sapi_get_convert_tradeflow(params=query)
 
 
 class Binance(BinanceBase):

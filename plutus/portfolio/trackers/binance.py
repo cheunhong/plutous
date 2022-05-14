@@ -1,4 +1,3 @@
-
 from plutus.trade.exchanges.binance import (
     Binance, ExchgArg, FuturesExchgArg
 )
