@@ -10,6 +10,7 @@ from .enums import Action, AssetType, PositionSide
 from .transaction import transactable_join
 from .realized_pnl import RealizedPnl
 from .commission import Commission
+from .adjustment import Adjustment
 from .base import BaseModel
 from ..config import config
 from .types import Amount
@@ -79,6 +80,7 @@ class Trade(BaseModel, table=True):
 
     account: "Account" = Relationship(back_populates='trades')
     commissions: List["Commission"] = Relationship(back_populates='trade')
+    adjustments: List["Adjustment"] = Relationship(back_populates='trade')
     realized_pnls: List["RealizedPnl"] = Relationship(back_populates='trade')
     position_flows: List["PositionFlow"] = Relationship(back_populates='trade')
     currency_exchanges: List["CurrencyExchange"] = (

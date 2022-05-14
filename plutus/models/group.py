@@ -13,6 +13,7 @@ DEFAULT_TYPES = {
     'commission': TAccountType.expense,
     'deposit': TAccountType.income,
     'capital': TAccountType.equity,
+    'adjustment': TAccountType.expense,
 }
 
 
