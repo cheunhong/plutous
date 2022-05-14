@@ -57,6 +57,12 @@ class TAccount(BaseModel, table=True):
             lazy='dynamic', order_by='desc(Position.opened_at)',
         )
     )
+    adjustments: AppenderQuery = Relationship(
+        sa_relationship=relationship(
+            'Adjustment', back_populates='t_account',
+            lazy='dynamic', order_by='desc(Adjustment.adjusted_at)',
+        )
+    )
     commissions: AppenderQuery = Relationship(
         sa_relationship=relationship(
             'Commission', back_populates='t_account',
