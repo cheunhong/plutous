@@ -1,0 +1,6 @@
+[tool.autopep8]
+in-place = true
+max_line_length = 79
+ignore = ["E402", "E711"]
+aggressive = 2
+recursive = true
