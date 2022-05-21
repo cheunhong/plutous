@@ -2,7 +2,7 @@ from .models.enums import AssetType
 
 
 TIMEZONE = 'UTC'
-ENV_VAR_PREFIX = 'PLUTUS'
+ENV_VAR_PREFIX = 'PLUTOUS'
 STABLECOINS = ['USDT', 'BUSD', 'USDC']
 POSITION_BASE_CURRENCY = {
     AssetType.crypto: 'USDT'

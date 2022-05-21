@@ -57,10 +57,10 @@ def flat_vars_to_nested_dict(
     env_dict: Dict[str, Any], prefix: str
 ) -> Dict[str, Any]:
     """
-    Environment variables must be prefixed with PLUTUS.
-    PLUTUS__{section}__{key}
+    Environment variables must be prefixed with PLUTOUS.
+    PLUTOUS__{section}__{key}
     :param env_dict: Dictionary to validate - usually os.environ
-    :param prefix: Prefix to consider (usually PLUTUS__)
+    :param prefix: Prefix to consider (usually PLUTOUS__)
     :return: Nested dict based on available and relevant variables.
     """
     relevant_vars: Dict[str, Any] = {}
