@@ -1,4 +1,4 @@
-package app.plutous.plutous_frontend
+package io.plutous.plutous_frontend
 
 import io.flutter.embedding.android.FlutterActivity
 
