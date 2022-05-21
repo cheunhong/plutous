@@ -16,7 +16,7 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
 
 RUN rm -R ta-lib ta-lib-0.4.0-src.tar.gz
 
-# Install plutus
-RUN mkdir plutus
-COPY . plutus
-RUN pip install -e plutus
+# Install plutous
+RUN mkdir plutous
+COPY . plutous
+RUN pip install -e plutous

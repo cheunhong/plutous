@@ -1,17 +1,17 @@
 import setuptools
-import plutus
+import plutous
 
 
 setuptools.setup(
-    name = 'plutus',
+    name = 'plutous',
     packages = setuptools.find_packages(),
     include_package_data = True,
-    version = plutus.__version__,
+    version = plutous.__version__,
     python_requires = '>=3.7.*',
     description = 'Personal Finance & Portfolio Tracker',
     author = 'cheunhong',
     author_email = 'chlin6755@gmail.com',
-    url = 'https://github.com/cheunhong/plutus',
+    url = 'https://github.com/cheunhong/plutous',
     install_requires = [
         'SQLAlchemy<=1.4.35',
         'PyPortfolioOpt',

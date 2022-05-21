@@ -16,11 +16,11 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
 
 RUN rm -R ta-lib ta-lib-0.4.0-src.tar.gz
 
-# Install plutus
+# Install plutous
 WORKDIR /root
-RUN mkdir plutus
-COPY . plutus
-RUN pip install -e plutus
+RUN mkdir plutous
+COPY . plutous
+RUN pip install -e plutous
 
 RUN pip install jupyterlab
 WORKDIR /root/work

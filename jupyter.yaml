@@ -1,16 +1,16 @@
 version: "3.3"
 
 services:
-  plutus-jupyter:
+  plutous-jupyter:
     build:
       context: .
       dockerfile: Dockerfile.jupyter
-    container_name: plutus-jupyter
+    container_name: plutous-jupyter
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - SHELL=/bin/bash
     volumes:
-      - .:/root/plutus
+      - .:/root/plutous
       - ./notebooks:/root/work
       - ./data:/root/work/data
       - ./secrets:/root/work/secrets
