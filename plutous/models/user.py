@@ -1,6 +1,7 @@
+from .base import BaseModel
+
 from sqlmodel import Field, Relationship, Column, String
 from typing import TYPE_CHECKING, List
-from .base import BaseModel
 
 if TYPE_CHECKING:
     from .account import Account

@@ -6,9 +6,11 @@ from plutous.models import Trade, FundingFee
 from plutous.config import config
 from plutous.utils import condecimal
 from plutous import database as db
+from .base import BaseTracker
+
 from typing import Any, Dict, List
 from datetime import timedelta
-from .base import BaseTracker
+
 import pandas as pd
 import numpy as np
 import itertools

@@ -1,8 +1,10 @@
 
+from .utils import add_preprocess, paginate
+
 from ccxt.async_support import binance, binanceusdm, binancecoinm
 from ccxt.base.errors import NotSupported, BadSymbol
 from datetime import datetime, timedelta, timezone
-from .utils import add_preprocess, paginate
+
 
 
 @add_preprocess

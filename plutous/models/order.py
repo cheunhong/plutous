@@ -1,3 +1,7 @@
+from .enums import AssetType, Action, OrderType
+from .base import BaseModel
+from .types import Amount
+
 from sqlmodel import (
     Field, Relationship, Column, ForeignKey,
     DECIMAL, JSON, Enum, String, Text, text
@@ -5,9 +9,6 @@ from sqlmodel import (
 from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP
 from typing import TYPE_CHECKING, Optional, Dict, Any
 from datetime import datetime
-from .enums import AssetType, Action, OrderType
-from .base import BaseModel
-from .types import Amount
 
 if TYPE_CHECKING:
     from .account import Account

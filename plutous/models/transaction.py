@@ -1,3 +1,10 @@
+from .enums import PositionFlowType, Action
+from .position_flow import PositionFlow
+from .position import Position
+from .base import BaseModel
+from .types import Amount
+from .group import Group
+
 from sqlmodel import (
     Field, Relationship, Column, ForeignKey,
     Index, DECIMAL, String, Text, Session, text
@@ -9,12 +16,7 @@ from typing import TYPE_CHECKING, Optional, List
 from pydantic.fields import ModelPrivateAttr
 from pydantic import PrivateAttr
 from datetime import datetime
-from .enums import PositionFlowType, Action
-from .position_flow import PositionFlow
-from .position import Position
-from .base import BaseModel
-from .types import Amount
-from .group import Group
+
 import re
 
 if TYPE_CHECKING:

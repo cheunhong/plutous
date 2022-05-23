@@ -1,3 +1,8 @@
+from .sub_position_link import SubPositionLink
+from .enums import PositionFlowType, AssetType
+from .base import BaseModel
+from .types import Amount
+
 from sqlmodel import (
     Field, Relationship, Session, Column,
     ForeignKey, DECIMAL, Enum, text,
@@ -5,10 +10,7 @@ from sqlmodel import (
 from sqlalchemy.dialects.mysql import TIMESTAMP
 from typing import TYPE_CHECKING, Optional, List
 from datetime import datetime
-from .sub_position_link import SubPositionLink
-from .enums import PositionFlowType, AssetType
-from .base import BaseModel
-from .types import Amount
+
 import numpy as np
 
 if TYPE_CHECKING:

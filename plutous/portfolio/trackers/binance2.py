@@ -4,6 +4,8 @@ from plutous.models import Trade, FundingFee
 from plutous.utils import condecimal
 from plutous.config import config
 from plutous import database as db
+from .base import BaseTracker
+
 from typing_extensions import Literal
 from typing import Any, Dict, List
 from datetime import timedelta

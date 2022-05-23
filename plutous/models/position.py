@@ -1,3 +1,11 @@
+from .enums import (
+    AssetType, PositionFlowType, PositionSide
+)
+from .position_flow import PositionFlow
+from .sub_position import SubPosition
+from .base import BaseModel
+from .types import Amount
+
 from sqlmodel import (
     Field, Relationship, Column, ForeignKey, Index,
     DECIMAL, JSON, Enum, Session, String, text,
@@ -8,13 +16,6 @@ from typing import (
     TYPE_CHECKING, Optional, List, Dict, Any,
 )
 from datetime import datetime
-from .enums import (
-    AssetType, PositionFlowType, PositionSide
-)
-from .position_flow import PositionFlow
-from .sub_position import SubPosition
-from .base import BaseModel
-from .types import Amount
 
 if TYPE_CHECKING:
     from typing_extensions import Self

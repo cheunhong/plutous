@@ -1,3 +1,8 @@
+from .transaction import Transaction, Transactable
+from .enums import AssetType, PositionSide
+from .position import Position
+from .types import Amount
+
 from sqlmodel import (
     Field, Relationship, Session, ForeignKey,
     Column, Index, DECIMAL, JSON, String, Enum
@@ -5,10 +10,6 @@ from sqlmodel import (
 from sqlalchemy.dialects.mysql import TIMESTAMP
 from typing import TYPE_CHECKING, Optional, Dict, Any
 from datetime import datetime
-from .transaction import Transaction, Transactable
-from .enums import AssetType, PositionSide
-from .position import Position
-from .types import Amount
 
 if TYPE_CHECKING:
     from typing_extensions import Self

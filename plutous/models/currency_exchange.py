@@ -1,3 +1,6 @@
+from .transaction import Transaction, Transactable, DoubleEntry
+from .types import Amount
+
 from sqlmodel import (
     Field, Relationship, Column,
     ForeignKey, DECIMAL, Session, text
@@ -6,10 +9,6 @@ from sqlalchemy.dialects.mysql import TIMESTAMP
 from sqlalchemy.orm import relationship
 from typing import TYPE_CHECKING, Optional
 from datetime import datetime
-from .transaction import (
-    Transaction, Transactable, DoubleEntry,
-)
-from .types import Amount
 
 if TYPE_CHECKING:
     from typing_extensions import Self

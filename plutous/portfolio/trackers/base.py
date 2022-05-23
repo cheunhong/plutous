@@ -2,6 +2,7 @@ from plutous.models import Trade, Position, Account
 from plutous.models.enums import AssetType
 from plutous.config import config
 from plutous import database as db
+
 from datetime import datetime, timedelta
 from typing import List, Optional
 from sqlmodel import Session
