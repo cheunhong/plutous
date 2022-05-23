@@ -1,13 +1,15 @@
+from plutous.config import config
+from plutous.models import *
+
+from sqlalchemy.ext.asyncio import AsyncSession as _AsyncSession
 from sqlmodel.sql.expression import Select, SelectOfScalar
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlmodel import SQLModel, create_engine, text
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.engine import URL
+from sqlmodel import SQLModel, create_engine, text
 from alembic.config import Config
 from alembic import command
-from typing import Optional
-from .config import config
-from .models import *
+
 import logging
 import os
 
@@ -15,23 +17,13 @@ import os
 logger = logging.getLogger(__name__)
 
 db = config['db']
-def get_uri(
-    host: Optional[str] = db['host'],
-    port: Optional[str] = db['port'],
-    user: Optional[str] = db['user'],
-    password: Optional[str] = db['password'],
-    database: Optional[str] = db['database'],
-    driver: Optional[str] = 'pymysql',
-) -> str:
-    return f"mysql+{driver}://{user}:{password}@{host}:{port}/{database}"
+uri = URL.create(**db)
 
-
-engine = create_engine(get_uri())
-async_engine = create_async_engine(get_uri(driver='asyncmy'))
-is_engine = create_engine(get_uri(database='information_schema')
-)
+engine = create_engine(uri)
+async_engine = create_async_engine(uri.set(driver='asyncmy'))
+is_engine = create_engine(uri.set(database='information_schema'))
 Session = sessionmaker(engine, autoflush=False)
-AsyncSession = sessionmaker(async_engine, autoflush=False, class_=AsyncSession)
+AsyncSession = sessionmaker(async_engine, autoflush=False, class_=_AsyncSession)
 
 # Silencing some SQL Alchemy warning about inherit_cache performance
 SelectOfScalar.inherit_cache = True  # type: ignore
@@ -43,8 +35,7 @@ def _get_alembic_config():
     directory = os.path.join(current_dir, 'migrations')
     config = Config(os.path.join(current_dir, 'alembic.ini'))
     config.set_main_option('script_location', directory)
-    config.set_main_option('sqlalchemy.url', get_uri())
-
+    config.set_main_option('sqlalchemy.url', uri)
     return config
 
 

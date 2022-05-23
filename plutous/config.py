@@ -1,12 +1,8 @@
+from plutous.constants import DEFAULT_CONFIG, ENV_VAR_PREFIX
 from plutous.utils import (
-    deep_merge_dicts,
     flat_vars_to_nested_dict,
+    deep_merge_dicts,
 )
-from plutous.constants import (
-    DEFAULT_CONFIG,
-    ENV_VAR_PREFIX,
-)
-
 
 import json
 import os
