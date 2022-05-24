@@ -1,5 +1,5 @@
-from plutous.config import config
-from plutous.models import *
+import logging
+import os
 
 from sqlalchemy.ext.asyncio import AsyncSession as _AsyncSession
 from sqlmodel.sql.expression import Select, SelectOfScalar
@@ -10,8 +10,8 @@ from sqlmodel import SQLModel, create_engine, text
 from alembic.config import Config
 from alembic import command
 
-import logging
-import os
+from plutous.config import config
+from plutous.models import *
 
 
 logger = logging.getLogger(__name__)

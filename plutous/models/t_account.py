@@ -1,10 +1,3 @@
-
-from plutous.config import config
-from .enums import TAccountType, AssetType, PositionSide
-from .position import Position
-from .base import BaseModel
-from .types import Amount
-
 from sqlmodel import (
     Field, Relationship, Column, ForeignKey,
     DECIMAL, String, Enum, text
@@ -13,6 +6,12 @@ from sqlalchemy.orm import relationship, AppenderQuery
 from typing import TYPE_CHECKING, Optional, Dict
 from pydantic import PrivateAttr
 from datetime import datetime
+
+from plutous.config import config
+from .enums import TAccountType, AssetType, PositionSide
+from .position import Position
+from .base import BaseModel
+from .types import Amount
 
 if TYPE_CHECKING:
     from .transaction import Transaction

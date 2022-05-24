@@ -1,7 +1,3 @@
-from .sub_position_link import SubPositionLink
-from .base import BaseModel
-from .types import Amount
-
 from sqlmodel import (
     Field, Relationship, Column, ForeignKey, DECIMAL, text
 )
@@ -9,6 +5,9 @@ from sqlalchemy.dialects.mysql import TIMESTAMP
 from typing import TYPE_CHECKING, Optional, List
 from datetime import datetime
 
+from .sub_position_link import SubPositionLink
+from .base import BaseModel
+from .types import Amount
 
 if TYPE_CHECKING:
     from .position_flow import PositionFlow

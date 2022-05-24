@@ -1,3 +1,13 @@
+import pandas as pd
+import numpy as np
+import itertools
+import asyncio
+
+from typing_extensions import Literal
+from typing import Any, Dict, List
+from datetime import timedelta
+from decimal import Decimal
+
 from plutous.trade.exchanges2 import Binance, BinanceUsdm, BinanceCoinm
 from plutous.models.enums import Action, AssetType
 from plutous.models import Trade, FundingFee
@@ -5,16 +15,6 @@ from plutous.utils import condecimal
 from plutous.config import config
 from plutous import database as db
 from .base import BaseTracker
-
-from typing_extensions import Literal
-from typing import Any, Dict, List
-from datetime import timedelta
-from decimal import Decimal
-from .base import BaseTracker
-import pandas as pd
-import numpy as np
-import itertools
-import asyncio
 
 
 TIMEZONE = config['timezone']

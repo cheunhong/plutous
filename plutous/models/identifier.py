@@ -1,11 +1,11 @@
-from .base import BaseModel
-
 from sqlmodel import (
     Field, Relationship, Column,
     Index, ForeignKey, Text, String
 )
 from sqlalchemy.orm import relationship
 from typing import TYPE_CHECKING, Optional
+
+from .base import BaseModel
 
 if TYPE_CHECKING:
     from .t_account import TAccount

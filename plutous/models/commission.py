@@ -1,10 +1,10 @@
-from .transaction import Transaction, Transactable, SingleEntry
-from .types import Amount
-
 from sqlmodel import Field, Relationship, Column, ForeignKey, DECIMAL, text
 from sqlalchemy.dialects.mysql import TIMESTAMP
 from typing import TYPE_CHECKING, Optional
 from datetime import datetime
+
+from .transaction import Transaction, Transactable, SingleEntry
+from .types import Amount
 
 if TYPE_CHECKING:
     from .t_account import TAccount

@@ -1,11 +1,11 @@
-from .base import BaseModel
-from .types import Amount
-
 from sqlmodel import (
     Field, Relationship, Column,
     Index, ForeignKey, DECIMAL,
 )
 from typing import TYPE_CHECKING
+
+from .base import BaseModel
+from .types import Amount
 
 if TYPE_CHECKING:
     from .transaction import Transaction

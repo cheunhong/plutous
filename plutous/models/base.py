@@ -1,3 +1,6 @@
+import inflect
+import re
+
 from sqlmodel import SQLModel, Field, Column, Session, text
 from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP
 from sqlalchemy.ext.declarative import declared_attr
@@ -5,8 +8,6 @@ from sqlalchemy.orm import Query, InstanceState
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import inspect
 from typing import TYPE_CHECKING, Optional, List
-import inflect
-import re
 
 if TYPE_CHECKING:
     from typing_extensions import Self

@@ -1,15 +1,15 @@
-from .enums import TAccountType, AssetType, PositionSide
-from .currency_exchange import CurrencyExchange
-from .t_account import TAccount
-from .position import Position
-from .base import BaseModel
-
 from sqlmodel import Field, Relationship, Column, ForeignKey, String, Boolean
 from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP
 from sqlalchemy.orm import relationship, AppenderQuery
 from typing import TYPE_CHECKING, Optional, Dict
 from pydantic import PrivateAttr
 from datetime import datetime
+
+from .enums import TAccountType, AssetType, PositionSide
+from .currency_exchange import CurrencyExchange
+from .t_account import TAccount
+from .position import Position
+from .base import BaseModel
 
 if TYPE_CHECKING:
     from .currency_exchange import CurrencyExchange

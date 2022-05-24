@@ -1,10 +1,10 @@
-from .enums import TAccountType
-from .t_account import TAccount
-from .base import BaseModel
-
 from sqlmodel import Field, Relationship, Column, String
 from sqlalchemy.orm import relationship, AppenderQuery
 from typing import TYPE_CHECKING, Optional
+
+from .enums import TAccountType
+from .t_account import TAccount
+from .base import BaseModel
 
 
 DEFAULT_TYPES = {
